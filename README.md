@@ -96,52 +96,87 @@
 ![image](https://github.com/maksim25y/LibraryApp/assets/131711956/26ca6a28-b8d3-4a2a-bd34-75e05d0b440c)
 
 </details>
-<details><summary>Установка</summary>
 Для того, чтобы проделать следующие шаги на Windows, установите [Git Bash](https://gitforwindows.org/)
 
 1. Склонируйте репозиторий
 
 ```shell
-git clone https://github.com/F0RRZZ/BrainStorm.git
-```
-2. Создайте и активируйте venv
-
-```shell
-cd BrainStorm
-```
-```shell
-python -m venv venv
-```
-```shell
-source venv/Scripts/activate
-``` 
-
-3. Установите зависимости
-
-* Основные зависимости
-
-```shell
-pip install -r requirements/prod.txt
-``` 
-
-*Зависимости для разработки
-
-```shell
-pip install -r requirements/dev.txt
+git clone https://github.com/F0RRZZ/artlebedev_test_task.git
 ```
 
-*Зависимости для тестирования
+2. Скачайте и установите Docker
+
+Скачать и найти инструкцию по установке вы можете на официальном сайте [Docker](https://www.docker.com)
+
+3. Запустите сайт в Docker
+
+Для этого откройте терминал и перейдите в папку репозитория
 
 ```shell
-pip install -r requirements/test.txt
+cd artlebedev_test_task
 ```
 
-4. Устанавите переменные окружения
+Войдите в корневую директорию проекта
 
 ```shell
-cd brainstorm
+cd artlebedev_test_task
 ```
+
+#### ! Перед тем, как собрать докер контейнеры, измените файл .env.docker на нужные значения. Либо измените его из командной строки контейнера (как в нее войти будет сказано дальше) !
+
+---
+
+#### Переменные окружения в .env
+
+Описание:
+1. ALLOWED_HOSTS - разрешенные хосты
+2. DEBUG - режим отладки
+3. POSTGRES_DB - имя базы данных
+4. POSTGRES_HOST - хост базы данных (в данном случае имя сервиса в docker-compose)
+5. POSTGRES_PASSWORD - пароль от базы данных
+6. POSTGRES_PORT - порт, требующийся для работы базы данных
+7. POSTGRES_USER - имя пользователя базы данных
+8. SECRET_KEY - секретный ключ от вашего сайта
+
+Далее введите команду
+
 ```shell
-cp .env-example .env
+docker-compose up --build
 ```
-</details>
+
+4. Создайте суперпользователя
+
+После того как вы запустили сайт в Docker нужно создать суперпользователя для доступа в панель администратора
+
+Для начала нам нужно узнать ID контейнера, в котором запущен веб-сервер
+
+```shell
+docker ps -a
+```
+
+В данном списке найдите контейнер с именем reviewer-web и скопируйте CONTAINER ID
+
+Далее введите команду
+
+```shell
+docker exec -it <container_id> sh
+```
+
+Вместо <container_id> вставьте раннее скопированный ID
+
+После ввода данной команды вам должен быть предоставлен доступ к командной строке контейнера
+
+Вам нужно ввести команду:
+
+```shell
+python manage.py createsuperuser
+```
+
+И ввести данные суперпользователя
+
+Теперь вы можете зарегистрироваться по данным, введенным раннее и получить доступ к панеле администратора
+
+Готово! Сервер запущен.
+Чтобы зайти на сайт перейдите по ссылке: localhost:8000
+
+Чтобы остановить работу контейнеров, в терминале, откуда вы запускали docker-compose нажмите Ctrl+C (Control + C для Mac)
