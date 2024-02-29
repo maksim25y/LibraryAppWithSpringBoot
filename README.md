@@ -89,7 +89,7 @@
 ![image](https://github.com/maksim25y/LibraryApp/assets/131711956/c71df1de-8f92-4dfe-aeaf-353b26c362cc)
 </details>
 <details><summary>Реализация</summary>
-Во время выполнения проекта я использовал следующий набор технологий: PostgreSQL, ApacheTomcat, Maven, Spring MVC, Spring Data JPA, ORM Hibernate, Bootstrap, Thymeleaf + Spring Boot.
+Во время выполнения проекта я использовал следующий набор технологий: PostgreSQL, ApacheTomcat, Maven, Spring MVC, Spring Data JPA, ORM Hibernate, Bootstrap, Thymeleaf + Spring Boot, Docker.
   
 База данных:
 
