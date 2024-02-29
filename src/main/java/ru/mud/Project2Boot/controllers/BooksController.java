@@ -46,7 +46,7 @@ public class BooksController {
     }
     @PostMapping
     public String createBook(@ModelAttribute("book")@Valid Book book, BindingResult bindingResult){
-        if(bindingResult.hasErrors())return "books/new";
+        if(bindingResult.hasErrors())return "views/books/new";
         booksService.save(book);
         return "redirect:/books";
     }
@@ -95,7 +95,7 @@ public class BooksController {
     }
     @GetMapping("/search")
     public String searchBooks(){
-        return "books/search";
+        return "views/books/search";
     }
     @PostMapping("/search")
     public String getBooksByName(@RequestParam("search")String search,Model model){
