@@ -96,7 +96,8 @@
 ![image](https://github.com/maksim25y/LibraryApp/assets/131711956/26ca6a28-b8d3-4a2a-bd34-75e05d0b440c)
 
 </details>
-Для того, чтобы проделать следующие шаги на Windows, установите [[Git Bash](https://git-scm.com/)])
+<details><summary>Функционал</summary>
+Для того, чтобы проделать следующие шаги на Windows, установите [Git Bash](https://git-scm.com/)
 
 1. Склонируйте репозиторий
 
@@ -135,3 +136,5 @@ docker-compose up --build
 Чтобы зайти на сайт перейдите по ссылке: localhost:8080
 
 Чтобы остановить работу контейнеров, в терминале, откуда вы запускали docker-compose нажмите Ctrl+C (Control + C для Mac)
+</details>
+
