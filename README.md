@@ -96,3 +96,52 @@
 ![image](https://github.com/maksim25y/LibraryApp/assets/131711956/26ca6a28-b8d3-4a2a-bd34-75e05d0b440c)
 
 </details>
+<details><summary>Установка</summary>
+Для того, чтобы проделать следующие шаги на Windows, установите [Git Bash](https://gitforwindows.org/)
+
+1. Склонируйте репозиторий
+
+```shell
+git clone https://github.com/F0RRZZ/BrainStorm.git
+```
+2. Создайте и активируйте venv
+
+```shell
+cd BrainStorm
+```
+```shell
+python -m venv venv
+```
+```shell
+source venv/Scripts/activate
+``` 
+
+3. Установите зависимости
+
+* Основные зависимости
+
+```shell
+pip install -r requirements/prod.txt
+``` 
+
+*Зависимости для разработки
+
+```shell
+pip install -r requirements/dev.txt
+```
+
+*Зависимости для тестирования
+
+```shell
+pip install -r requirements/test.txt
+```
+
+4. Устанавите переменные окружения
+
+```shell
+cd brainstorm
+```
+```shell
+cp .env-example .env
+```
+</details>
