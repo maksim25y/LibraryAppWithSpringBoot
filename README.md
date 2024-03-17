@@ -96,7 +96,7 @@
 ![image](https://github.com/maksim25y/LibraryApp/assets/131711956/26ca6a28-b8d3-4a2a-bd34-75e05d0b440c)
 
 </details>
-<details><summary>Функционал</summary>
+<details><summary>Запуск</summary>
 Для того, чтобы проделать следующие шаги на Windows, установите [Git Bash](https://git-scm.com/)
 
 1. Склонируйте репозиторий
