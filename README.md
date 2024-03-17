@@ -97,7 +97,7 @@
 
 </details>
 <details><summary>Запуск</summary>
-Для того, чтобы проделать следующие шаги на Windows, установите [Git Bash](https://git-scm.com/)
+Для того, чтобы запустить необходимо проделать следующие шаги на Windows, установите [Git Bash](https://git-scm.com/)
 
 1. Склонируйте репозиторий
 
