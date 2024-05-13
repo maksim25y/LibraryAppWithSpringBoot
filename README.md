@@ -120,12 +120,11 @@ cd LibraryAppWithSpringBoot
 #### Переменные окружения в .env
 
 Описание:
-1. POSTGRES_DB - имя базы данных
-2. POSTGRES_HOST - хост базы данных (в данном случае имя сервиса в docker-compose)
-3. POSTGRES_PASSWORD - пароль от базы данных
-4. POSTGRES_PORT - порт, требующийся для работы базы данных
-5. POSTGRES_USER - имя пользователя базы данных
-6. SECRET_KEY - секретный ключ от вашего сайта
+1. POSTGRES_USER - логин для БД
+2. POSTGRES_PASSWORD - пароль от базы данных
+3. SPRING_DATASOURCE_URL - адрес БД
+4. SPRING_DATASOURCE_USERNAME - логин для БД, но для Spring
+5. SPRING_DATASOURCE_PASSWORD - пароль для БД, но для Spring
 
 Далее введите команду
 
