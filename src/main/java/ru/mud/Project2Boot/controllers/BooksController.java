@@ -99,9 +99,7 @@ public class BooksController {
     }
     @PostMapping("/search")
     public String getBooksByName(@RequestParam("search")String search,Model model){
-        System.out.println(search);
         Book book = booksService.getBooksByPrefix(search);
-        System.out.println(book);
         if(book!=null){
             model.addAttribute("book",book);
             Person person = booksService.getPersonByBook(book);
