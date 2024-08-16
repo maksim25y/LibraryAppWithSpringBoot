@@ -13,11 +13,14 @@ import ru.mud.Project2Boot.models.Person;
 import ru.mud.Project2Boot.services.BooksService;
 import ru.mud.Project2Boot.services.PeopleService;
 
+import java.util.Optional;
+
 @Controller
 @Component
 @Transactional
 @RequestMapping("/books")
 public class BooksController {
+    private final String VIEWS_BOOKS = "views/books/";
     private final BooksService booksService;
     private final PeopleService peopleService;
     @Autowired
@@ -37,12 +40,12 @@ public class BooksController {
         }else {
             model.addAttribute("books",booksService.findAll(sortByYear));
         }
-        return "views/books/index";
+        return VIEWS_BOOKS+"index";
     }
     @GetMapping("/new")
     public String newBook(Model model){
         model.addAttribute("book",new Book());
-        return "views/books/new";
+        return VIEWS_BOOKS+"new";
     }
     @PostMapping
     public String createBook(@ModelAttribute("book")@Valid Book book, BindingResult bindingResult){
@@ -61,30 +64,32 @@ public class BooksController {
             model.addAttribute("person", booksService.getBookPerson(id));
             System.out.println(booksService.getBookPerson(id));
         }
-        return "views/books/show";
+        return VIEWS_BOOKS+"show";
     }
     @GetMapping("/{id}/edit")
     public String getEdit(@PathVariable("id")int id,Model model){
         model.addAttribute("book",booksService.findById(id).get());
-        return "views/books/edit";
+        return VIEWS_BOOKS+"edit";
     }
     @PatchMapping("/{id}")
     public String updateBook(@PathVariable("id")int id,
                              @ModelAttribute("book")@Valid Book book,
                              BindingResult bindingResult){
-        if(bindingResult.hasErrors())return "views/books/edit";
+        if(bindingResult.hasErrors())return VIEWS_BOOKS+"edit";
         booksService.update(id,book);
         return "redirect:/books";
     }
     @PostMapping("/{id}")
     public String changeBook(@RequestParam(value = "userId",required = false) Integer userId, @PathVariable("id")int id,
                              @ModelAttribute("person") Person person){
-        Book book = booksService.findById(id).get();
-        if(userId!=null){
-            peopleService.deleteBookFromPerson(book);
-        }else {
-            System.out.println(person);
-            peopleService.addBookToPeople(person.getId(),book);
+        Optional<Book> bookOptional = booksService.findById(id);
+        if(bookOptional.isPresent()){
+            Book book = bookOptional.get();
+            if(userId!=null){
+                peopleService.deleteBookFromPerson(book);
+            }else {
+                peopleService.addBookToPeople(person.getId(),book);
+            }
         }
         return "redirect:/books";
     }
@@ -95,7 +100,7 @@ public class BooksController {
     }
     @GetMapping("/search")
     public String searchBooks(){
-        return "views/books/search";
+        return VIEWS_BOOKS+"search";
     }
     @PostMapping("/search")
     public String getBooksByName(@RequestParam("search")String search,Model model){
@@ -104,8 +109,9 @@ public class BooksController {
             model.addAttribute("book",book);
             Person person = booksService.getPersonByBook(book);
             if(person!=null)model.addAttribute("person",person);
+        } else{
+            model.addAttribute("notBook",true);
         }
-        else model.addAttribute("notBook",true);
-        return "views/books/search";
+        return VIEWS_BOOKS+"search";
     }
 }

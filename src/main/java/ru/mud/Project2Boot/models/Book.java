@@ -53,13 +53,6 @@ public class Book {
     public void setTaken(Date taken) {
         this.taken = taken;
     }
-    //    public LocalDate getTaken() {
-//        return taken;
-//    }
-//
-//    public void setTaken(LocalDate taken) {
-//        this.taken = taken;
-//    }
 
 
     public Book(int id, String name, String author, int date, Date taken) {
