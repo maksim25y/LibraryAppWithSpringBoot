@@ -55,27 +55,33 @@ public class BooksController {
     }
     @GetMapping("/{id}")
     public String getBook(@PathVariable("id")int id, Model model){
-        Book book = booksService.findById(id).get();
-        model.addAttribute("book",book);
-        if(booksService.getBookPerson(id)==null) {
-            model.addAttribute("people", peopleService.findAll());
-            model.addAttribute("give", new Person());
-        }else {
-            model.addAttribute("person", booksService.getBookPerson(id));
-            System.out.println(booksService.getBookPerson(id));
+        Optional<Book> bookOptional = booksService.findById(id);
+        if(bookOptional.isPresent()){
+            Book book = bookOptional.get();
+            model.addAttribute("book",book);
+            if(booksService.getBookPerson(id)==null) {
+                model.addAttribute("people", peopleService.findAll());
+                model.addAttribute("give", new Person());
+            }else {
+                model.addAttribute("person", booksService.getBookPerson(id));
+                System.out.println(booksService.getBookPerson(id));
+            }
         }
         return VIEWS_BOOKS+"show";
     }
     @GetMapping("/{id}/edit")
     public String getEdit(@PathVariable("id")int id,Model model){
-        model.addAttribute("book",booksService.findById(id).get());
+        Optional<Book>optionalBook = booksService.findById(id);
+        optionalBook.ifPresent(book -> model.addAttribute("book", book));
         return VIEWS_BOOKS+"edit";
     }
     @PatchMapping("/{id}")
     public String updateBook(@PathVariable("id")int id,
                              @ModelAttribute("book")@Valid Book book,
                              BindingResult bindingResult){
-        if(bindingResult.hasErrors())return VIEWS_BOOKS+"edit";
+        if(bindingResult.hasErrors()){
+            return VIEWS_BOOKS+"edit";
+        }
         booksService.update(id,book);
         return "redirect:/books";
     }
