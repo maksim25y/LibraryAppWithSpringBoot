@@ -116,7 +116,7 @@ public class BooksController {
             Person person = booksService.getPersonByBook(book);
             if(person!=null)model.addAttribute("person",person);
         } else{
-            model.addAttribute("notBook",true);
+            model.addAttribute("notFoundBook",true);
         }
         return VIEWS_BOOKS+"search";
     }
