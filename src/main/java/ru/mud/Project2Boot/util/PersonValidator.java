@@ -7,9 +7,13 @@ import org.springframework.validation.Validator;
 import ru.mud.Project2Boot.models.Person;
 import ru.mud.Project2Boot.services.PeopleService;
 
+import java.util.Optional;
+
 @Component
 public class PersonValidator implements Validator {
+
     private final PeopleService peopleService;
+
     @Autowired
     public PersonValidator(PeopleService peopleService) {
         this.peopleService = peopleService;
@@ -23,8 +27,10 @@ public class PersonValidator implements Validator {
     @Override
     public void validate(Object o, Errors errors) {
         Person person = (Person) o;
-        if (!peopleService.getPersonByInfo(person.getInfo()).isEmpty()) {
-            if (peopleService.getPersonByInfo(person.getInfo()).get().getId() != person.getId()) {
+        Optional<Person> existingPerson = peopleService.getPersonByInfo(person.getInfo());
+
+        if (existingPerson.isPresent()) {
+            if (existingPerson.get().getId() != person.getId()) {
                 errors.rejectValue("info", "", "Пользователь с такими данными уже существует");
             }
         }

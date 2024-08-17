@@ -64,7 +64,6 @@ public class BooksController {
                 model.addAttribute("give", new Person());
             }else {
                 model.addAttribute("person", booksService.getBookPerson(id));
-                System.out.println(booksService.getBookPerson(id));
             }
         }
         return VIEWS_BOOKS+"show";
