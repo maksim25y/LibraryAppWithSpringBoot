@@ -9,13 +9,12 @@ import ru.mud.Project2Boot.models.Person;
 import ru.mud.Project2Boot.repositories.PeopleRepository;
 
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class PeopleService {
     private final PeopleRepository peopleRepository;
     @Autowired
@@ -26,47 +25,49 @@ public class PeopleService {
         return peopleRepository.findAll();
     }
     public Optional<Person> findById(Integer id){return peopleRepository.findById(id);}
-    @Transactional
     public void save(Person person){
         peopleRepository.save(person);
     }
-    @Transactional
     public void update(int id,Person person){
         person.setId(id);
         peopleRepository.save(person);
     }
-    @Transactional
     public List<Book>getBooksByPersonId(int id){
-        Optional<Person>person = peopleRepository.findById(id);
-        Hibernate.initialize(person.get().getBookList());
-        List<Book>books = person.get().getBookList();
-        Date now = new Date();
-        for(Book book:books){
-            Date bookTaken = book.getTaken();
-            long curr = now.getTime()-bookTaken.getTime();
-            long diffInDays = TimeUnit.MILLISECONDS.toDays(curr);
-            book.setBad(diffInDays>10);
+        Optional<Person> personOptional = peopleRepository.findById(id);
+        if (personOptional.isPresent()) {
+            Person person = personOptional.get();
+            Hibernate.initialize(person.getBookList());
+            return person.getBookList().stream()
+                    .peek(book -> {
+                        long diffInDays = TimeUnit.MILLISECONDS.toDays(new Date().getTime() - book.getTaken().getTime());
+                        book.setBad(diffInDays > 10);
+                    })
+                    .collect(Collectors.toList());
+        } else {
+            return Collections.emptyList();
         }
-        return books;
-    }
-    @Transactional
-    public void deleteBookFromPerson(Book book) {
-        Person person = book.getPerson();
-        book.setPerson(null);
-        Hibernate.initialize(person.getBookList().remove(book));
-        book.setTaken(null);
-        System.out.println("Good");
     }
 
-    @Transactional
-    public void addBookToPeople(int id, Book book) {
-        Person person = peopleRepository.findById(id).get();
-        person.getBookList().add(book);
-        book.setTaken(new Date());
-        book.setPerson(person);
+    public void deleteBookFromPerson(Book book) {
+        if(book!=null){
+            Person person = book.getPerson();
+            book.setPerson(null);
+            Hibernate.initialize(person.getBookList().remove(book));
+            book.setTaken(null);
+        }
     }
-    @Transactional
-    public void delete(int id) {
+    public void addBookToPeople(int id, Book book) {
+        Optional<Person>personOptional = peopleRepository.findById(id);
+        if(personOptional.isPresent()){
+            Person person = personOptional.get();
+            if(book!=null){
+                person.getBookList().add(book);
+                book.setTaken(new Date());
+                book.setPerson(person);
+            }
+        }
+    }
+    public void delete(Integer id) {
         peopleRepository.deleteById(id);
     }
     public Optional<Person>getPersonByInfo(String name){

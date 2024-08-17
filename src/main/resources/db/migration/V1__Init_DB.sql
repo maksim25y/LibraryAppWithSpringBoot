@@ -28,4 +28,4 @@ INSERT INTO person (info, birthday) VALUES ('Иванов Иван Иванов�
 				INSERT INTO book (name, author, date, user_id, taken) VALUES ('Мастер и Маргарита', 'Иванов Сергей Иванович', 1967, 3, '2024-02-29 12:00:00');
 				INSERT INTO book (name, author, date, user_id, taken) VALUES ('Анна Каренина', 'Иванов Сергей Иванович', 1877, 4, '2024-02-29 13:00:00');
 				INSERT INTO book (name, author, date, user_id, taken) VALUES ('Бесы', 'Иванов Сергей Иванович', 1872, 5, '2024-02-29 14:00:00');
-				INSERT INTO book (name, author, date, user_id, taken) VALUES ('Мёртвые души', 'Иванов Сергей Иванович', 1842, 6, '2024-02-29 15:00:00');
+				INSERT INTO book (name, author, date, user_id, taken) VALUES ('Мёртвые души', 'Иванов Сергей Иванович', 1842, 6, '2024-08-17 15:00:00');
