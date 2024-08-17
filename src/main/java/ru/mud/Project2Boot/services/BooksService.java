@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class BooksService {
     private final BooksRepository booksRepository;
     @Autowired
@@ -26,24 +26,20 @@ public class BooksService {
     public Optional<Book> findById(int id){
         return booksRepository.findById(id);
     }
-    @Transactional
     public void save(Book book) {
         booksRepository.save(book);
     }
-    @Transactional
     public void update(int id,Book book) {
         book.setId(id);
         booksRepository.save(book);
     }
-    @Transactional
     public void delete(int id){
         booksRepository.deleteBookById(id);
     }
-    @Transactional
     public Person getBookPerson(int id) {
-        return booksRepository.findById(id).get().getPerson();
+        Optional<Book>bookOptional = booksRepository.findById(id);
+        return bookOptional.map(Book::getPerson).orElse(null);
     }
-    @Transactional
     public Book getBooksByPrefix(String search) {
         return booksRepository.findByNameStartingWith(search);
     }
