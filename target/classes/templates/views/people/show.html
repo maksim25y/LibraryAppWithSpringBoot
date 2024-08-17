@@ -34,7 +34,7 @@
                 </li>
             </ul>
         </div>
-        <div th:if="${notBooks}">
+        <div th:if="not ${books}">
             <ul class="list-group mb-2">
                 <li class="list-group-item list-group-item-warning">У человека нет книг</li>
             </ul>

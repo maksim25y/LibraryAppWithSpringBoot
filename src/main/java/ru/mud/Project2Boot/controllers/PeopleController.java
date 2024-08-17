@@ -12,10 +12,12 @@ import ru.mud.Project2Boot.services.PeopleService;
 import ru.mud.Project2Boot.util.PersonValidator;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/people")
 public class PeopleController {
+    private final String VIEWS_PEOPLE = "views/people/";
     private final PeopleService peopleService;
     private final PersonValidator personValidator;
     @Autowired
@@ -27,26 +29,27 @@ public class PeopleController {
     @GetMapping
     public String getPeople(Model model){
         model.addAttribute("people",peopleService.findAll());
-        return "views/people/index";
+        return VIEWS_PEOPLE+"index";
     }
     @GetMapping("/{id}")
     public String show(@PathVariable("id")int id, Model model){
-        model.addAttribute("person",peopleService.findById(id).get());
-        List<Book> books = peopleService.getBooksByPersonId(id);
-        if(!books.isEmpty())
-            model.addAttribute("books",books);
-        else
-            model.addAttribute("notBooks",true);
-        return "views/people/show";
+        Optional<Person>personOptional = peopleService.findById(id);
+        if(personOptional.isPresent()){
+            model.addAttribute("person",personOptional.get());
+            List<Book> books = peopleService.getBooksByPersonId(id);
+            if(!books.isEmpty())
+                model.addAttribute("books",books);
+        }
+        return VIEWS_PEOPLE+"show";
     }
 
     @GetMapping("/new")
     public String addGet(Model model){
         model.addAttribute("person",new Person());
-        return "views/people/new";
+        return VIEWS_PEOPLE+"new";
     }
     @PostMapping
-    public String addNew(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult, Model model){
+    public String addNew(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult){
         personValidator.validate(person,bindingResult);
         if(bindingResult.hasErrors())return "views/people/new";
         peopleService.save(person);
@@ -54,14 +57,15 @@ public class PeopleController {
     }
     @GetMapping("/{id}/edit")
     public String editGet(@PathVariable("id")int id,Model model){
-        model.addAttribute("person",peopleService.findById(id).get());
-        return "views/people/edit";
+        Optional<Person>personOptional = peopleService.findById(id);
+        personOptional.ifPresent(person->model.addAttribute("person",person));
+        return VIEWS_PEOPLE+"edit";
     }
     @PatchMapping("/{id}")
     public String updatePerson(@ModelAttribute("person") @Valid Person person,
                                BindingResult bindingResult,@PathVariable("id") int id){
         personValidator.validate(person,bindingResult);
-        if(bindingResult.hasErrors())return "people/edit";
+        if(bindingResult.hasErrors())return VIEWS_PEOPLE+"edit";
         peopleService.update(id,person);
         return "redirect:/people";
     }

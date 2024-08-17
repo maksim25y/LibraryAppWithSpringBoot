@@ -23,9 +23,9 @@ INSERT INTO person (info, birthday) VALUES ('Иванов Иван Иванов�
 				INSERT INTO person (info, birthday) VALUES ('Марков Виталий Николаевич', 1989);
 				INSERT INTO person (info, birthday) VALUES ('Мурлина Татьяна Ивановна', 1987);
 				INSERT INTO person (info, birthday) VALUES ('Трофимов Виктор Маратыч', 1992);
-				INSERT INTO book (name, author, date, user_id, taken) VALUES ('Война и мир', 'Лев Толстой', 1869, 1, '2024-02-29 10:00:00');
-				INSERT INTO book (name, author, date, user_id, taken) VALUES ('Преступление и наказание', 'Федор Достоевский', 1866, 2, '2024-02-29 11:00:00');
-				INSERT INTO book (name, author, date, user_id, taken) VALUES ('Мастер и Маргарита', 'Михаил Булгаков', 1967, 3, '2024-02-29 12:00:00');
-				INSERT INTO book (name, author, date, user_id, taken) VALUES ('Анна Каренина', 'Лев Толстой', 1877, 4, '2024-02-29 13:00:00');
-				INSERT INTO book (name, author, date, user_id, taken) VALUES ('Бесы', 'Федор Достоевский', 1872, 5, '2024-02-29 14:00:00');
-				INSERT INTO book (name, author, date, user_id, taken) VALUES ('Мёртвые души', 'Николай Гоголь', 1842, 6, '2024-02-29 15:00:00');
+				INSERT INTO book (name, author, date, user_id, taken) VALUES ('Война и мир', 'Иванов Сергей Иванович', 1869, 1, '2024-02-29 10:00:00');
+				INSERT INTO book (name, author, date, user_id, taken) VALUES ('Преступление и наказание', 'Иванов Сергей Иванович', 1866, 2, '2024-02-29 11:00:00');
+				INSERT INTO book (name, author, date, user_id, taken) VALUES ('Мастер и Маргарита', 'Иванов Сергей Иванович', 1967, 3, '2024-02-29 12:00:00');
+				INSERT INTO book (name, author, date, user_id, taken) VALUES ('Анна Каренина', 'Иванов Сергей Иванович', 1877, 4, '2024-02-29 13:00:00');
+				INSERT INTO book (name, author, date, user_id, taken) VALUES ('Бесы', 'Иванов Сергей Иванович', 1872, 5, '2024-02-29 14:00:00');
+				INSERT INTO book (name, author, date, user_id, taken) VALUES ('Мёртвые души', 'Иванов Сергей Иванович', 1842, 6, '2024-02-29 15:00:00');
