@@ -81,4 +81,21 @@ public class BooksServiceTests {
         book.setAuthor("Test Test");
         assertThrows(RuntimeException.class,()->booksService.save(book));
     }
+    @Test
+    public void whenUpdateNameForBookThenNameEqualsTestOne(){
+        Book book = new Book();
+        book.setId(1);
+        book.setName("Тест");
+        book.setDate(1990);
+        book.setAuthor("Тест Тест Тест");
+        booksService.save(book);
+        Optional<Book>savedBook = booksRepository.findById(book.getId());
+        assertTrue(savedBook.isPresent());
+        Book saved = savedBook.get();
+        saved.setName("Тест Один");
+        booksService.update(saved.getId(),saved);
+        Optional<Book>updatedBook = booksRepository.findById(book.getId());
+        assertTrue(updatedBook.isPresent());
+        assertEquals("Тест Один",updatedBook.get().getName());
+    }
 }
