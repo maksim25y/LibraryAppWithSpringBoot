@@ -4,8 +4,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import ru.mud.Project2Boot.Project2BootApplication;
 import ru.mud.Project2Boot.models.Book;
+import ru.mud.Project2Boot.models.Person;
 import ru.mud.Project2Boot.repositories.BooksRepository;
 import ru.mud.Project2Boot.services.BooksService;
+import ru.mud.Project2Boot.services.PeopleService;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +19,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class BooksServiceTests {
     @Autowired
     private BooksService booksService;
+    @Autowired
+    private PeopleService peopleService;
     @Autowired
     private BooksRepository booksRepository;
     @BeforeEach
@@ -108,6 +112,44 @@ public class BooksServiceTests {
         List<Book>resultBooks = booksService.findWithPagination(1,1,true);
         assertFalse(resultBooks.isEmpty());
         assertEquals(1990,resultBooks.get(0).getDate());
+    }
+    @Test
+    public void whenFindBookByIdAndBookPresentInDatabaseResultIsNotNull(){
+        Book book = getDefaultBook();
+        book.setId(2);
+        booksService.save(book);
+        Optional<Book>savedBook = booksService.findById(book.getId());
+        assertTrue(savedBook.isPresent());
+    }
+    @Test
+    public void whenFindBookByIdAndBookDoesNotPresentInDatabaseResultIsNull(){
+        Optional<Book>bookFromDatabase = booksService.findById(4);
+        assertFalse(bookFromDatabase.isPresent());
+    }
+    @Test
+    public void whenGetPersonByBookAndBookHasNotPersonResultEqualsNull(){
+        Book book = getDefaultBook();
+        book.setId(2);
+        booksService.save(book);
+        Optional<Book>savedBook = booksService.findById(book.getId());
+        assertTrue(savedBook.isPresent());
+        assertNull(savedBook.get().getPerson());
+
+    }
+    @Test
+    public void whenGetPersonByBookAndBookHasPersonResultNotEqualsNull(){
+        Book book = getDefaultBook();
+        book.setId(2);
+        booksService.save(book);
+        Person person = new Person();
+        person.setInfo("Тест Тест Тест");
+        person.setBirthday(1990);
+        peopleService.save(person);
+        book.setPerson(person);
+        booksService.save(book);
+        Optional<Book>savedBook = booksService.findById(book.getId());
+        assertTrue(savedBook.isPresent());
+        assertNotNull(savedBook.get().getPerson());
     }
     private Book getDefaultBook(){
         Book book = new Book();
