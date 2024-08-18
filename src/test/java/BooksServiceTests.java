@@ -7,6 +7,7 @@ import ru.mud.Project2Boot.models.Book;
 import ru.mud.Project2Boot.repositories.BooksRepository;
 import ru.mud.Project2Boot.services.BooksService;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -87,6 +88,26 @@ public class BooksServiceTests {
         Book book = getDefaultBook();
         booksService.save(book);
         assertNotNull(booksService.getBooksByPrefix("Тест"));
+    }
+    @Test
+    public void whenFindBooksWithPaginationThenSizeOfResultEquals(){
+        for(int i=0;i<100;i++){
+            Book book = getDefaultBook();
+            booksService.save(book);
+        }
+        assertEquals(100,booksRepository.findAll().size());
+        assertEquals(2,booksService.findWithPagination(1,2,false).size());
+    }
+    @Test
+    public void whenFindBooksSortedByDateFirstBookDateEquals1990(){
+        Book book1 = getDefaultBook();
+        Book book2 = getDefaultBook();
+        book2.setDate(2000);
+        booksService.save(book1);
+        booksService.save(book2);
+        List<Book>resultBooks = booksService.findWithPagination(1,1,true);
+        assertFalse(resultBooks.isEmpty());
+        assertEquals(1990,resultBooks.get(0).getDate());
     }
     private Book getDefaultBook(){
         Book book = new Book();
