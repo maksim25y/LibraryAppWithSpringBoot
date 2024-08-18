@@ -24,21 +24,14 @@ public class BooksServiceTests {
     }
     @Test
     public void whenInsertBookThenItIsPresentInDatabase(){
-        Book book = new Book();
-        book.setId(1);
-        book.setName("Тест");
-        book.setDate(1990);
-        book.setAuthor("Тест Тест Тест");
+        Book book = getDefaultBook();
         booksService.save(book);
         Optional<Book>savedBook = booksRepository.findById(book.getId());
         assertTrue(savedBook.isPresent());
     }
     @Test
     public void whenInsertBookThenSizeOfAllBooksEquals1(){
-        Book book = new Book();
-        book.setName("Тест");
-        book.setDate(1990);
-        book.setAuthor("Тест Тест Тест");
+        Book book = getDefaultBook();
         booksService.save(book);
         assertEquals(1,booksRepository.findAll().size());
     }
@@ -48,10 +41,7 @@ public class BooksServiceTests {
     }
     @Test
     public void whenInsertBookAndDeleteBookThenSizeOfAllBooksEquals0(){
-        Book book = new Book();
-        book.setName("Тест");
-        book.setDate(1990);
-        book.setAuthor("Тест Тест Тест");
+        Book book = getDefaultBook();
         booksService.save(book);
         assertEquals(1,booksRepository.findAll().size());
         booksService.delete(book.getId());
@@ -59,35 +49,25 @@ public class BooksServiceTests {
     }
     @Test
     public void whenInsertBookWithBadDateThenThrowException(){
-        Book book = new Book();
-        book.setName("Тест");
+        Book book = getDefaultBook();
         book.setDate(2922);
-        book.setAuthor("Тест Тест Тест");
         assertThrows(RuntimeException.class,()->booksService.save(book));
     }
     @Test
     public void whenInsertBookWithBadNameThenThrowException(){
-        Book book = new Book();
+        Book book = getDefaultBook();
         book.setName("Test");
-        book.setDate(2922);
-        book.setAuthor("Тест Тест Тест");
         assertThrows(RuntimeException.class,()->booksService.save(book));
     }
     @Test
     public void whenInsertBookWithAuthorInEnLanguageThenThrowException(){
-        Book book = new Book();
-        book.setName("Тест");
-        book.setDate(1990);
+        Book book = getDefaultBook();
         book.setAuthor("Test Test");
         assertThrows(RuntimeException.class,()->booksService.save(book));
     }
     @Test
     public void whenUpdateNameForBookThenNameEqualsTestOne(){
-        Book book = new Book();
-        book.setId(1);
-        book.setName("Тест");
-        book.setDate(1990);
-        book.setAuthor("Тест Тест Тест");
+        Book book = getDefaultBook();
         booksService.save(book);
         Optional<Book>savedBook = booksRepository.findById(book.getId());
         assertTrue(savedBook.isPresent());
@@ -97,5 +77,22 @@ public class BooksServiceTests {
         Optional<Book>updatedBook = booksRepository.findById(book.getId());
         assertTrue(updatedBook.isPresent());
         assertEquals("Тест Один",updatedBook.get().getName());
+    }
+    @Test
+    public void whenFindBookByPrefixAndBookDoesNotExistTheResultEqualsNull(){
+        assertNull(booksService.getBooksByPrefix("Тест"));
+    }
+    @Test
+    public void whenFindBookByPrefixAndBookExistTheResultNotNull(){
+        Book book = getDefaultBook();
+        booksService.save(book);
+        assertNotNull(booksService.getBooksByPrefix("Тест"));
+    }
+    private Book getDefaultBook(){
+        Book book = new Book();
+        book.setName("Тест");
+        book.setDate(1990);
+        book.setAuthor("Тест Тест Тест");
+        return book;
     }
 }
