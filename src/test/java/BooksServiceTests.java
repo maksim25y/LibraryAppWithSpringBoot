@@ -9,8 +9,7 @@ import ru.mud.Project2Boot.services.BooksService;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @SpringBootTest(classes = Project2BootApplication.class)
@@ -42,5 +41,44 @@ public class BooksServiceTests {
         book.setAuthor("Тест Тест Тест");
         booksService.save(book);
         assertEquals(1,booksRepository.findAll().size());
+    }
+    @Test
+    public void whenGetAllBooksThenResultEquals0(){
+        assertEquals(0,booksRepository.findAll().size());
+    }
+    @Test
+    public void whenInsertBookAndDeleteBookThenSizeOfAllBooksEquals0(){
+        Book book = new Book();
+        book.setName("Тест");
+        book.setDate(1990);
+        book.setAuthor("Тест Тест Тест");
+        booksService.save(book);
+        assertEquals(1,booksRepository.findAll().size());
+        booksService.delete(book.getId());
+        assertEquals(0,booksRepository.findAll().size());
+    }
+    @Test
+    public void whenInsertBookWithBadDateThenThrowException(){
+        Book book = new Book();
+        book.setName("Тест");
+        book.setDate(2922);
+        book.setAuthor("Тест Тест Тест");
+        assertThrows(RuntimeException.class,()->booksService.save(book));
+    }
+    @Test
+    public void whenInsertBookWithBadNameThenThrowException(){
+        Book book = new Book();
+        book.setName("Test");
+        book.setDate(2922);
+        book.setAuthor("Тест Тест Тест");
+        assertThrows(RuntimeException.class,()->booksService.save(book));
+    }
+    @Test
+    public void whenInsertBookWithAuthorInEnLanguageThenThrowException(){
+        Book book = new Book();
+        book.setName("Тест");
+        book.setDate(1990);
+        book.setAuthor("Test Test");
+        assertThrows(RuntimeException.class,()->booksService.save(book));
     }
 }
