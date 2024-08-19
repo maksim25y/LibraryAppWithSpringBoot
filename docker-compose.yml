@@ -2,13 +2,11 @@ version: '3.8'
 
 services:
   springbootapp:
-    image: openjdk:21
+    build: .
     env_file:
       - .env.docker
     ports:
       - "8080:8080"
-    volumes:
-      - ./target/Project2Boot-0.0.1-SNAPSHOT.jar:/app.jar
     command: ["java", "-jar", "/app.jar"]
     depends_on:
       - db
