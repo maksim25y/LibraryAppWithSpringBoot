@@ -100,8 +100,7 @@ public class BooksServiceTests {
             booksService.save(book);
         }
         assertEquals(100,booksRepository.findAll().size());
-        //2
-        assertEquals(1,booksService.findWithPagination(1,2,false).size());
+        assertEquals(2,booksService.findWithPagination(1,2,false).size());
     }
     @Test
     public void whenFindBooksSortedByDateFirstBookDateEquals1990(){
