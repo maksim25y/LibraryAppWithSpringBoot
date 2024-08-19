@@ -74,12 +74,12 @@ public class BooksServiceTests {
     public void whenUpdateNameForBookThenNameEqualsTestOne(){
         Book book = getDefaultBook();
         booksService.save(book);
-        Optional<Book>savedBook = booksRepository.findById(book.getId());
+        Optional<Book>savedBook = booksService.findById(book.getId());
         assertTrue(savedBook.isPresent());
         Book saved = savedBook.get();
         saved.setName("Тест Один");
         booksService.update(saved.getId(),saved);
-        Optional<Book>updatedBook = booksRepository.findById(book.getId());
+        Optional<Book>updatedBook = booksService.findById(book.getId());
         assertTrue(updatedBook.isPresent());
         assertEquals("Тест Один",updatedBook.get().getName());
     }
@@ -111,7 +111,7 @@ public class BooksServiceTests {
         booksService.save(book2);
         List<Book>resultBooks = booksService.findWithPagination(1,1,true);
         assertFalse(resultBooks.isEmpty());
-        assertEquals(1990,resultBooks.get(0).getDate());
+        assertEquals(1990,resultBooks.getFirst().getDate());
     }
     @Test
     public void whenFindBookByIdAndBookPresentInDatabaseResultIsNotNull(){
