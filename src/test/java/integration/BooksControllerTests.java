@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 public class BooksControllerTests {
-    private final String BOOKS_URL ="/books/";
+    private final String BOOKS_URL ="/books";
     private final String VIEWS_BOOKS = "views/books/";
     @Mock
     private BooksService booksService;
@@ -53,7 +53,7 @@ public class BooksControllerTests {
     }
     @Test
     public void shouldGetBooksNewAndAttributeBook() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(BOOKS_URL+"new")
+        mockMvc.perform(MockMvcRequestBuilders.get(BOOKS_URL+"/new")
                 .accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(view().name(VIEWS_BOOKS+"new"))
@@ -65,7 +65,7 @@ public class BooksControllerTests {
         List<Person>people = List.of(new Person());
         when(booksService.findById(book.getId())).thenReturn(Optional.of(book));
         when(peopleService.findAll()).thenReturn(people);
-        mockMvc.perform(MockMvcRequestBuilders.get(BOOKS_URL+"{id}", book.getId())
+        mockMvc.perform(MockMvcRequestBuilders.get(BOOKS_URL+"/{id}", book.getId())
                 .accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(view().name(VIEWS_BOOKS+"show"))
@@ -79,7 +79,7 @@ public class BooksControllerTests {
         Person person = new Person();
         when(booksService.findById(book.getId())).thenReturn(Optional.of(book));
         when(booksService.getBookPerson(book.getId())).thenReturn(person);
-        mockMvc.perform(MockMvcRequestBuilders.get(BOOKS_URL+"{id}", book.getId())
+        mockMvc.perform(MockMvcRequestBuilders.get(BOOKS_URL+"/{id}", book.getId())
                         .accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(view().name(VIEWS_BOOKS+"show"))
@@ -90,7 +90,7 @@ public class BooksControllerTests {
     public void shouldHasAttributeBookWhenGetEditBook() throws Exception {
         Book book = getDefaultBook();
         when(booksService.findById(book.getId())).thenReturn(Optional.of(book));
-        mockMvc.perform(MockMvcRequestBuilders.get(BOOKS_URL+"{id}/edit", book.getId())
+        mockMvc.perform(MockMvcRequestBuilders.get(BOOKS_URL+"/{id}/edit", book.getId())
                         .accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(view().name(VIEWS_BOOKS+"edit"))
@@ -98,7 +98,7 @@ public class BooksControllerTests {
     }
     @Test
     public void shouldGetViewSearchWhenGetSearch() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(BOOKS_URL+"search")
+        mockMvc.perform(MockMvcRequestBuilders.get(BOOKS_URL+"/search")
                         .accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(view().name(VIEWS_BOOKS+"search"));
@@ -107,13 +107,13 @@ public class BooksControllerTests {
     public void testCreateBookValid() throws Exception {
         Book book = getDefaultBook();
         book.setId(null);
-        mockMvc.perform(MockMvcRequestBuilders.post("/books")
+        mockMvc.perform(MockMvcRequestBuilders.post(BOOKS_URL)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("date", String.valueOf(book.getDate()))
                         .param("name", book.getName())
                         .param("author", book.getAuthor()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/books"));
+                .andExpect(redirectedUrl(BOOKS_URL));
     }
     @Test
     public void testCreateBookNotValid() throws Exception {
@@ -148,6 +148,40 @@ public class BooksControllerTests {
                         .param("date", String.valueOf(book.getDate()))
                         .param("name", book.getName())
                         .param("author", book.getAuthor()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/books"));
+    }
+    @Test
+    void deleteBookShouldDeleteBookAndRedirect() throws Exception {
+        int bookId = 2;
+        mockMvc.perform(MockMvcRequestBuilders.delete(BOOKS_URL+"/{id}", bookId)
+                        .accept(MediaType.TEXT_HTML))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrl(BOOKS_URL));
+    }
+    @Test
+    void testChangeBookAddBookToPerson() throws Exception {
+        Book book = getDefaultBook();
+        Person person = new Person();
+        when(booksService.findById(book.getId())).thenReturn(Optional.of(book));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(BOOKS_URL+"/{id}", book.getId())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .flashAttr("person", person))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/books"));
+    }
+    @Test
+    void testChangeBookDeleteBookFromPerson() throws Exception {
+        Book book = getDefaultBook();
+        Integer userId = 1;
+        when(booksService.findById(book.getId())).thenReturn(Optional.of(book));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/books/{id}", book.getId())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("userId", String.valueOf(userId)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/books"));
     }
