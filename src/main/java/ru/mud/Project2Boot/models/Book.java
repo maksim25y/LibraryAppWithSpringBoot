@@ -5,17 +5,18 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
+
 import java.util.Date;
 
 @Entity
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @ToString
+@NoArgsConstructor
+@Setter
+@Getter
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,9 +34,22 @@ public class Book {
     @ManyToOne
     @JoinColumn(name = "user_id",referencedColumnName = "id")
     private Person person;
+    @Getter
     @Column(name = "taken")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date taken;
     @Transient
-    private Boolean bad;
+    private boolean bad;
+
+    public boolean isBad() {
+        return bad;
+    }
+    public Book(Integer id, String name, String author, int date, Date taken) {
+        this.id = id;
+        this.name = name;
+        this.author = author;
+        this.date = date;
+        this.taken = taken;
+    }
+
 }
