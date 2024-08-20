@@ -13,9 +13,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.mud.Project2Boot.controllers.BooksController;
 import ru.mud.Project2Boot.models.Book;
+import ru.mud.Project2Boot.models.Person;
 import ru.mud.Project2Boot.services.BooksService;
+import ru.mud.Project2Boot.services.PeopleService;
+
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -23,8 +27,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 public class BooksControllerTests {
+    private final String BOOKS_URL ="/books/";
+    private final String VIEWS_BOOKS = "views/books/";
     @Mock
     private BooksService booksService;
+    @Mock
+    private PeopleService peopleService;
     @InjectMocks
     private BooksController booksController;
     private MockMvc mockMvc;
@@ -38,13 +46,40 @@ public class BooksControllerTests {
                 getDefaultBook(),getDefaultBook()
         );
         when(booksService.findAll(false)).thenReturn(books);
-        mockMvc.perform(MockMvcRequestBuilders.get("/books")
+        mockMvc.perform(MockMvcRequestBuilders.get(BOOKS_URL)
                         .accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
-                .andExpect(view().name("views/books/index"))
+                .andExpect(view().name(VIEWS_BOOKS+"index"))
                 .andExpect(MockMvcResultMatchers.model().attribute("books", books));
     }
+    @Test
+    public void shouldGetBooksNewAndAttributeBook() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(BOOKS_URL+"new")
+                .accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(view().name(VIEWS_BOOKS+"new"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("book"));
+    }
+    @Test
+    public void shouldHasAttributeBookIfGetBookByIdAndBookExistsAndPersonIdIsNull() throws Exception {
+        int bookId = 2;
+        Book book = getDefaultBook();
+        List<Person>people = List.of(new Person());
+        when(booksService.findById(bookId)).thenReturn(Optional.of(book));
+        when(peopleService.findAll()).thenReturn(people);
+        mockMvc.perform(MockMvcRequestBuilders.get("/books/{id}", bookId)
+                .accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(view().name(VIEWS_BOOKS+"show"))
+                .andExpect(MockMvcResultMatchers.model().attribute("book",book))
+                .andExpect(MockMvcResultMatchers.model().attribute("people",people))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("give"));
+    }
     private Book getDefaultBook(){
-        return new Book();
+        Book book = new Book();
+        book.setName("Тест");
+        book.setAuthor("Тест Тест Тест");
+        book.setDate(2000);
+        return book;
     }
 }
