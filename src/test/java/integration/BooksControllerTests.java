@@ -179,11 +179,37 @@ public class BooksControllerTests {
         when(booksService.findById(book.getId())).thenReturn(Optional.of(book));
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/books/{id}", book.getId())
+                        .post(BOOKS_URL+"/{id}", book.getId())
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("userId", String.valueOf(userId)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/books"));
+    }
+    @Test
+    public void findBooksByPrefixIfBooksFoundThenReturnBooks() throws Exception {
+        Book book = getDefaultBook();
+        String search = "Тес";
+        when(booksService.getBooksByPrefix(search)).thenReturn(book);
+        when(booksService.getPersonByBook(book)).thenReturn(null);
+
+        mockMvc.perform(MockMvcRequestBuilders.post(BOOKS_URL+"/search")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("search", search))
+                .andExpect(view().name(VIEWS_BOOKS+"search"))
+                .andExpect(model().attribute("book", book))
+                .andExpect(model().attributeDoesNotExist("person"))
+                .andExpect(model().attributeDoesNotExist("notFoundBook"));
+    }
+    @Test
+    public void findBooksByPrefixIfBooksNotFoundThenReturnAttributeNotFound() throws Exception {
+        String search = "Рез";
+        when(booksService.getBooksByPrefix(search)).thenReturn(null);
+
+        mockMvc.perform(MockMvcRequestBuilders.post(BOOKS_URL+"/search")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("search", search))
+                .andExpect(view().name(VIEWS_BOOKS+"search"))
+                .andExpect(model().attributeExists("notFoundBook"));
     }
     private Book getDefaultBook(){
         Book book = new Book();
