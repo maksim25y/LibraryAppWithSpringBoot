@@ -18,7 +18,7 @@ import java.util.List;
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     @NotEmpty(message = "Поле не может быть пустым")
     @Pattern(regexp = "[А-ЯЁ][а-яё]+ [А-ЯЁ][а-яё]+ [А-ЯЁ][а-яё]+",
             message = "Информация о вас должна быть в следующем формате: Фамилия Имя Отчество и на русском языке")
@@ -29,7 +29,7 @@ public class Person {
     @OneToMany(mappedBy = "person",fetch = FetchType.LAZY)
     @OrderBy(value = "taken DESC")
     private final List<Book>bookList = new ArrayList<>();
-    public Person(int id, String info, int birthday) {
+    public Person(Integer id, String info, int birthday) {
         this.id = id;
         this.info = info;
         this.birthday = birthday;

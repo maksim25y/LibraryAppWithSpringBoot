@@ -15,18 +15,20 @@ import ru.mud.Project2Boot.controllers.PeopleController;
 import ru.mud.Project2Boot.models.Book;
 import ru.mud.Project2Boot.models.Person;
 import ru.mud.Project2Boot.services.PeopleService;
+import ru.mud.Project2Boot.util.PersonValidator;
 
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
 public class PeopleControllerTests {
     private final String PEOPLE_URL = "/people";
     private final String VIEWS_PEOPLE = "views/people/";
+    @Mock
+    private PersonValidator personValidator;
     @Mock
     private PeopleService peopleService;
     @InjectMocks
@@ -85,6 +87,31 @@ public class PeopleControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(view().name(VIEWS_PEOPLE+"edit"))
                 .andExpect(MockMvcResultMatchers.model().attribute("person",person));
+    }
+    @Test
+    public void createPersonValid() throws Exception {
+        Person person = getDefaultPerson();
+        person.setId(null);
+        mockMvc.perform(MockMvcRequestBuilders.post(PEOPLE_URL)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("info", person.getInfo())
+                        .param("birthday", String.valueOf(person.getBirthday())))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(PEOPLE_URL));
+    }
+    @Test
+    public void createPersonNotValid() throws Exception {
+        Person person = getDefaultPerson();
+        person.setId(null);
+        person.setBirthday(2090);
+        mockMvc.perform(MockMvcRequestBuilders.post(PEOPLE_URL)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("info", person.getInfo())
+                        .param("birthday", String.valueOf(person.getBirthday())))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name(VIEWS_PEOPLE+"new"));
+        verify(peopleService, never()).save(any(Person.class));
+
     }
     private Person getDefaultPerson(){
         return new Person(1,"Иванов Иван Иванович",1990);
