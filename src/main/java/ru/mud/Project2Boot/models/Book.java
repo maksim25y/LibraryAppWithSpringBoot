@@ -21,7 +21,7 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @NotEmpty(message = "Поле не может быть пустым")
-    @Pattern(regexp = "[а-яА-Я\\s]+",message = "Название книги должно быть на русском языке")
+    @Pattern(regexp = "[а-яА-ЯёЁ\\s]+",message = "Название книги должно быть на русском языке")
     private String name;
     @NotEmpty(message = "Поле не может быть пустым")
     @Pattern(regexp = "[А-ЯЁ][а-яё]+ [А-ЯЁ][а-яё]+ [А-ЯЁ][а-яё]+",
