@@ -204,7 +204,6 @@ public class BooksControllerTests {
     public void findBooksByPrefixIfBooksNotFoundThenReturnAttributeNotFound() throws Exception {
         String search = "Рез";
         when(booksService.getBooksByPrefix(search)).thenReturn(null);
-
         mockMvc.perform(MockMvcRequestBuilders.post(BOOKS_URL+"/search")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("search", search))
