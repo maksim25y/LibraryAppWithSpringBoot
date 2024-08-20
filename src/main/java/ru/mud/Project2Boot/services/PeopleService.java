@@ -28,11 +28,11 @@ public class PeopleService {
     public void save(Person person){
         peopleRepository.save(person);
     }
-    public void update(int id,Person person){
+    public void update(Integer id,Person person){
         person.setId(id);
         peopleRepository.save(person);
     }
-    public List<Book>getBooksByPersonId(int id){
+    public List<Book>getBooksByPersonId(Integer id){
         Optional<Person> personOptional = peopleRepository.findById(id);
         if (personOptional.isPresent()) {
             Person person = personOptional.get();
@@ -56,7 +56,7 @@ public class PeopleService {
             book.setTaken(null);
         }
     }
-    public void addBookToPeople(int id, Book book) {
+    public void addBookToPeople(Integer id, Book book) {
         Optional<Person>personOptional = peopleRepository.findById(id);
         if(personOptional.isPresent()){
             Person person = personOptional.get();

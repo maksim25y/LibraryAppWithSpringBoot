@@ -32,7 +32,7 @@ public class PeopleController {
         return VIEWS_PEOPLE+"index";
     }
     @GetMapping("/{id}")
-    public String show(@PathVariable("id")int id, Model model){
+    public String show(@PathVariable("id")Integer id, Model model){
         Optional<Person>personOptional = peopleService.findById(id);
         if(personOptional.isPresent()){
             model.addAttribute("person",personOptional.get());
@@ -56,21 +56,21 @@ public class PeopleController {
         return "redirect:/people";
     }
     @GetMapping("/{id}/edit")
-    public String editGet(@PathVariable("id")int id,Model model){
+    public String editGet(@PathVariable("id")Integer id,Model model){
         Optional<Person>personOptional = peopleService.findById(id);
         personOptional.ifPresent(person->model.addAttribute("person",person));
         return VIEWS_PEOPLE+"edit";
     }
     @PatchMapping("/{id}")
     public String updatePerson(@ModelAttribute("person") @Valid Person person,
-                               BindingResult bindingResult,@PathVariable("id") int id){
+                               BindingResult bindingResult,@PathVariable("id") Integer id){
         personValidator.validate(person,bindingResult);
         if(bindingResult.hasErrors())return VIEWS_PEOPLE+"edit";
         peopleService.update(id,person);
         return "redirect:/people";
     }
     @DeleteMapping("/{id}")
-    public String deletePerson(@PathVariable("id") int id){
+    public String deletePerson(@PathVariable("id") Integer id){
         peopleService.delete(id);
         return "redirect:/people";
     }
