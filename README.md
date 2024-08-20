@@ -102,7 +102,7 @@
 1. Склонируйте репозиторий
 
 ```shell
-git clone git@github.com:maksim25y/LibraryApp.git
+git clone https://github.com/maksim25y/LibraryAppWithSpringBoot.git
 ```
 
 2. Скачайте и установите Docker
