@@ -111,7 +111,35 @@ public class PeopleControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name(VIEWS_PEOPLE+"new"));
         verify(peopleService, never()).save(any(Person.class));
-
+    }
+    @Test
+    public void testUpdatePersonValid() throws Exception {
+        Person person = getDefaultPerson();
+        mockMvc.perform(MockMvcRequestBuilders.patch(PEOPLE_URL+"/{id}",person.getId())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("info", person.getInfo())
+                        .param("birthday", String.valueOf(person.getBirthday())))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(PEOPLE_URL));
+    }
+    @Test
+    public void testUpdatePersonNotValid() throws Exception {
+        Person person = getDefaultPerson();
+        person.setBirthday(2090);
+        mockMvc.perform(MockMvcRequestBuilders.patch(PEOPLE_URL+"/{id}",person.getId())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("info", person.getInfo())
+                        .param("birthday", String.valueOf(person.getBirthday())))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name(VIEWS_PEOPLE+"edit"));
+    }
+    @Test
+    void deleteBookShouldDeletePersonAndRedirect() throws Exception {
+        int personId = 2;
+        mockMvc.perform(MockMvcRequestBuilders.delete(PEOPLE_URL+"/{id}", personId)
+                        .accept(MediaType.TEXT_HTML))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrl(PEOPLE_URL));
     }
     private Person getDefaultPerson(){
         return new Person(1,"Иванов Иван Иванович",1990);
