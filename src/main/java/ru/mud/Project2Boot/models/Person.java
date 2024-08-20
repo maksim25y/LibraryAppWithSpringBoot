@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 @Entity
 @ToString
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Person {
     @Id

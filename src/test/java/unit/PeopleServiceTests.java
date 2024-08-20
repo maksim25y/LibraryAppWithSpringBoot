@@ -30,7 +30,6 @@ public class PeopleServiceTests {
         Person person = getDefaultPerson();
         peopleService.save(person);
         Optional<Person>personOptional = peopleRepository.findById(person.getId());
-        System.out.println(personOptional);
         assertTrue(personOptional.isPresent());
     }
     @Test
