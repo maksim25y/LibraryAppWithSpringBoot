@@ -14,7 +14,7 @@ import java.util.Date;
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     @NotEmpty(message = "Поле не может быть пустым")
     @Pattern(regexp = "[а-яА-Я\\s]+",message = "Название книги должно быть на русском языке")
     private String name;
@@ -55,7 +55,7 @@ public class Book {
     }
 
 
-    public Book(int id, String name, String author, int date, Date taken) {
+    public Book(Integer id, String name, String author, int date, Date taken) {
         this.id = id;
         this.name = name;
         this.author = author;
@@ -63,11 +63,11 @@ public class Book {
         this.taken = taken;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

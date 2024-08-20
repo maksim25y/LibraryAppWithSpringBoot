@@ -22,8 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
 public class BooksControllerTests {
@@ -103,6 +102,54 @@ public class BooksControllerTests {
                         .accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(view().name(VIEWS_BOOKS+"search"));
+    }
+    @Test
+    public void testCreateBookValid() throws Exception {
+        Book book = getDefaultBook();
+        book.setId(null);
+        mockMvc.perform(MockMvcRequestBuilders.post("/books")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("date", String.valueOf(book.getDate()))
+                        .param("name", book.getName())
+                        .param("author", book.getAuthor()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/books"));
+    }
+    @Test
+    public void testCreateBookNotValid() throws Exception {
+        Book book = getDefaultBook();
+        book.setDate(2090);
+        book.setId(null);
+        mockMvc.perform(MockMvcRequestBuilders.post(BOOKS_URL)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("date", String.valueOf(book.getDate()))
+                        .param("name", book.getName())
+                        .param("author", book.getAuthor()))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name(VIEWS_BOOKS+"new"));
+    }
+    @Test
+    public void testUpdateBookNotValid() throws Exception {
+        Book book = getDefaultBook();
+        book.setDate(2090);
+        mockMvc.perform(MockMvcRequestBuilders.patch(BOOKS_URL+"/{id}",book.getId())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("date", String.valueOf(book.getDate()))
+                        .param("name", book.getName())
+                        .param("author", book.getAuthor()))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name(VIEWS_BOOKS+"edit"));
+    }
+    @Test
+    public void testUpdateBookValid() throws Exception {
+        Book book = getDefaultBook();
+        mockMvc.perform(MockMvcRequestBuilders.patch(BOOKS_URL+"/{id}",book.getId())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("date", String.valueOf(book.getDate()))
+                        .param("name", book.getName())
+                        .param("author", book.getAuthor()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/books"));
     }
     private Book getDefaultBook(){
         Book book = new Book();
