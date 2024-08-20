@@ -62,12 +62,11 @@ public class BooksControllerTests {
     }
     @Test
     public void shouldHasAttributeBookIfGetBookByIdAndBookExistsAndPersonIdIsNull() throws Exception {
-        int bookId = 2;
         Book book = getDefaultBook();
         List<Person>people = List.of(new Person());
-        when(booksService.findById(bookId)).thenReturn(Optional.of(book));
+        when(booksService.findById(book.getId())).thenReturn(Optional.of(book));
         when(peopleService.findAll()).thenReturn(people);
-        mockMvc.perform(MockMvcRequestBuilders.get("/books/{id}", bookId)
+        mockMvc.perform(MockMvcRequestBuilders.get(BOOKS_URL+"{id}", book.getId())
                 .accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(view().name(VIEWS_BOOKS+"show"))
@@ -75,8 +74,39 @@ public class BooksControllerTests {
                 .andExpect(MockMvcResultMatchers.model().attribute("people",people))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("give"));
     }
+    @Test
+    public void shouldHasAttributeBookIfGetBookByIdAndBookExistsAndPersonIsNotNull() throws Exception {
+        Book book = getDefaultBook();
+        Person person = new Person();
+        when(booksService.findById(book.getId())).thenReturn(Optional.of(book));
+        when(booksService.getBookPerson(book.getId())).thenReturn(person);
+        mockMvc.perform(MockMvcRequestBuilders.get(BOOKS_URL+"{id}", book.getId())
+                        .accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(view().name(VIEWS_BOOKS+"show"))
+                .andExpect(MockMvcResultMatchers.model().attribute("book",book))
+                .andExpect(MockMvcResultMatchers.model().attribute("person",person));
+    }
+    @Test
+    public void shouldHasAttributeBookWhenGetEditBook() throws Exception {
+        Book book = getDefaultBook();
+        when(booksService.findById(book.getId())).thenReturn(Optional.of(book));
+        mockMvc.perform(MockMvcRequestBuilders.get(BOOKS_URL+"{id}/edit", book.getId())
+                        .accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(view().name(VIEWS_BOOKS+"edit"))
+                .andExpect(MockMvcResultMatchers.model().attribute("book",book));
+    }
+    @Test
+    public void shouldGetViewSearchWhenGetSearch() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(BOOKS_URL+"search")
+                        .accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(view().name(VIEWS_BOOKS+"search"));
+    }
     private Book getDefaultBook(){
         Book book = new Book();
+        book.setId(2);
         book.setName("Тест");
         book.setAuthor("Тест Тест Тест");
         book.setDate(2000);
