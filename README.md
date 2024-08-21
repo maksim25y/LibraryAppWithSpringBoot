@@ -1,4 +1,4 @@
-Данный проект я выполнял при изучении Hibernate/Spring Core/Spring Data Jpa (добавил еще Spring Boot) , представляет из себя веб-приложение (система учета книг в бибилиотеке). (В него был добавлен Spring Boot, ссылка на начальный проект: https://github.com/maksim25y/LibraryApp)
+Данный проект представляет из себя веб-приложение (система учета книг в бибилиотеке).
 
 <details><summary>Функционал</summary>
 На главной странице расположен блок с кнопками и хэдер. При нажатии на  кнопку "Список людей в библиотеке" происходит переход на страницу (/people) со списком людей в библиотеке.
@@ -89,7 +89,9 @@
 ![image](https://github.com/maksim25y/LibraryApp/assets/131711956/c71df1de-8f92-4dfe-aeaf-353b26c362cc)
 </details>
 <details><summary>Реализация</summary>
-Во время выполнения проекта я использовал следующий набор технологий: PostgreSQL, ApacheTomcat, Maven, Spring MVC, Spring Data JPA, ORM Hibernate, Bootstrap, Thymeleaf + Spring Boot, Docker.
+Во время выполнения проекта я использовал следующий набор технологий: PostgreSQL, ApacheTomcat, Maven, Spring MVC, Spring Data JPA, ORM Hibernate, Bootstrap, Thymeleaf, Spring Boot, Docker.
+Были написаны unit - тесты и интеграционные тесты для контроллеров.
+Произведена настройка Github Actions.
   
 База данных:
 
